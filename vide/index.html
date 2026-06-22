@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>我的网站</title>
+
+<style>
+    body {
+        margin: 0;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: radial-gradient(circle at top, #1e3c72, #2a5298);
+        font-family: Arial, sans-serif;
+        overflow: hidden;
+        color: white;
+    }
+
+    /* 背景粒子效果 */
+    .particle {
+        position: absolute;
+        width: 6px;
+        height: 6px;
+        background: rgba(255,255,255,0.6);
+        border-radius: 50%;
+        animation: float 6s infinite ease-in-out;
+    }
+
+    @keyframes float {
+        0% { transform: translateY(0); opacity: 0.2; }
+        50% { opacity: 1; }
+        100% { transform: translateY(-800px); opacity: 0; }
+    }
+
+    .container {
+        text-align: center;
+        z-index: 2;
+    }
+
+    h1 {
+        margin-bottom: 30px;
+        font-size: 36px;
+        text-shadow: 0 0 10px rgba(0,0,0,0.4);
+    }
+
+    button {
+        padding: 20px 40px;
+        font-size: 22px;
+        border: none;
+        border-radius: 50px;
+        cursor: pointer;
+        background: linear-gradient(45deg, #ff416c, #ff4b2b);
+        color: white;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    button:hover {
+        transform: scale(1.1);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.5);
+    }
+
+    /* 视频页面 */
+    .video-page {
+        display: none;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: black;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+
+    video {
+        width: 80%;
+        max-width: 900px;
+        border-radius: 10px;
+    }
+
+</style>
+</head>
+
+<body>
+
+<!-- 粒子 -->
+<script>
+for(let i=0;i<40;i++){
+    let p=document.createElement("div");
+    p.className="particle";
+    p.style.left=Math.random()*100+"vw";
+    p.style.top=Math.random()*100+"vh";
+    p.style.animationDuration=(3+Math.random()*5)+"s";
+    document.body.appendChild(p);
+}
+</script>
+
+<div class="container" id="home">
+    <h1>欢迎来到我的网站</h1>
+    <button onclick="goVideo()">点击进入视频</button>
+</div>
+
+<div class="video-page" id="videoPage">
+    <video controls autoplay>
+        <source src="video.mp4" type="video/mp4">
+        你的浏览器不支持视频播放
+    </video>
+</div>
+
+<script>
+function goVideo() {
+    document.getElementById("home").style.display = "none";
+    document.getElementById("videoPage").style.display = "flex";
+}
+</script>
+
+</body>
+</html>
