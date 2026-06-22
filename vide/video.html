@@ -1,15 +1,135 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<title>视频页面</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>视频</title>
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    width: 100vw; min-height: 100vh;
+    background: #07070e;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  /* 背景动态光效 */
+  .bg-aura {
+    position: fixed; inset: 0;
+    z-index: 0;
+    background:
+      radial-gradient(ellipse at 20% 50%, rgba(100, 0, 255, 0.18) 0%, transparent 55%),
+      radial-gradient(ellipse at 80% 50%, rgba(255, 0, 180, 0.14) 0%, transparent 55%),
+      radial-gradient(ellipse at 50% 80%, rgba(0, 180, 255, 0.12) 0%, transparent 55%);
+    animation: auraShift 8s ease-in-out infinite alternate;
+    pointer-events: none;
+  }
+
+  @keyframes auraShift {
+    0% { opacity: 0.7; transform: scale(1); }
+    100% { opacity: 1; transform: scale(1.1); }
+  }
+
+  /* 左侧浮动 emoji */
+  .side-emojis {
+    position: fixed;
+    top: 50%; transform: translateY(-50%);
+    z-index: 5;
+    display: flex; flex-direction: column;
+    gap: 28px;
+    pointer-events: none;
+  }
+  .side-emojis.left { left: max(10px, 3vw); }
+  .side-emojis.right { right: max(10px, 3vw); }
+
+  .big-emoji {
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    animation: bounceEmoji var(--bdur) ease-in-out infinite;
+    animation-delay: var(--bdel);
+    filter: drop-shadow(0 0 18px var(--bglow));
+    transform-origin: center;
+  }
+
+  @keyframes bounceEmoji {
+    0%, 100% { transform: translateY(0) scale(1); }
+    20% { transform: translateY(-24px) scale(1.15); }
+    40% { transform: translateY(0) scale(0.92); }
+    60% { transform: translateY(-14px) scale(1.06); }
+    80% { transform: translateY(0) scale(0.97); }
+  }
+
+  /* 视频容器 */
+  .video-wrapper {
+    position: relative; z-index: 10;
+    width: min(90vw, 900px);
+    max-width: 95%;
+    background: rgba(0,0,0,0.5);
+    border-radius: 20px;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.15);
+    box-shadow: 0 0 80px rgba(120,100,255,0.2);
+    overflow: hidden;
+    padding: 8px;
+  }
+
+  video {
+    width: 100%; height: auto;
+    display: block;
+    border-radius: 14px;
+    outline: none;
+  }
+
+  /* 响应式调整 */
+  @media (max-width: 640px) {
+    .side-emojis { gap: 18px; }
+    .video-wrapper { padding: 4px; border-radius: 14px; }
+    video { border-radius: 10px; }
+  }
+</style>
 </head>
+<body>
 
-<body style="margin:0; background:black; display:flex; justify-content:center; align-items:center; height:100vh;">
+<!-- 动态光效背景 -->
+<div class="bg-aura"></div>
 
-<video controls autoplay style="width:90%; max-width:900px;">
+<!-- 左侧浮动 emoji -->
+<div class="side-emojis left" id="leftEmojis"></div>
+
+<!-- 右侧浮动 emoji -->
+<div class="side-emojis right" id="rightEmojis"></div>
+
+<!-- 视频 -->
+<div class="video-wrapper">
+  <video controls playsinline preload="metadata">
     <source src="video.mp4" type="video/mp4">
-</video>
+    你的浏览器不支持视频播放。
+  </video>
+</div>
 
+<script>
+  const emojiPool = ['🔥','✨','💀','👾','⚡','💎','🔮','🌀','🌈','🫧','🎯','💊','🦾','👽','🎧'];
+
+  function createSideEmojis(container, count) {
+    for (let i = 0; i < count; i++) {
+      const span = document.createElement('span');
+      span.className = 'big-emoji';
+      span.textContent = emojiPool[Math.floor(Math.random() * emojiPool.length)];
+      span.style.setProperty('--bdur', (2.2 + Math.random() * 2.6) + 's');
+      span.style.setProperty('--bdel', Math.random() * 2 + 's');
+      const hue = Math.floor(Math.random() * 360);
+      span.style.setProperty('--bglow', `hsla(${hue},80%,65%,0.55)`);
+      container.appendChild(span);
+    }
+  }
+
+  createSideEmojis(document.getElementById('leftEmojis'), 7);
+  createSideEmojis(document.getElementById('rightEmojis'), 7);
+</script>
 </body>
 </html>
